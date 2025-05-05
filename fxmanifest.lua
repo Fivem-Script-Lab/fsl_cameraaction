@@ -8,7 +8,8 @@ lua54 'yes'
 
 client_scripts {
     'main.lua',
-    'freecam.lua'
+    'freecam.lua',
+    'steps.lua'
 }
 
 server_scripts {

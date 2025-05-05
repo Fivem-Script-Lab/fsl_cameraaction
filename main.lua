@@ -44,6 +44,30 @@ function Overload(name, params, cb)
     end
 end
 
+---@type {string: function[]}
+local listeners<const> = {}
+
+function AttachListener(name, cb)
+    listeners[name] = listeners[name] or {}
+    listeners[name][#listeners[name]+1] = cb
+end
+
+function FireEvent(name, ...)
+    for _,cb in ipairs(listeners[name] or {}) do
+        cb(...)
+    end
+end
+
+function RemoveListener(name, ref)
+    for key,cb in ipairs(listeners[name] or {}) do
+        if cb == ref then
+            table.remove(listeners[name], key)
+            return true
+        end
+    end
+    return false
+end
+
 --- Camera Creation
 
 --- @class CamData
@@ -54,6 +78,9 @@ end
 local CamData = {}
 
 -- Constants
+C_IMG_ENCODING = "jpg"
+C_IMG_QUALITY = 0.50
+
 C_ROT_ORDER = 2
 C_ROT_X_MIN = -180.0
 C_ROT_X_MAX = 180.0
@@ -67,14 +94,21 @@ C_FOV_MAX = 120
 C_CAM_DEFAULT_FOV = 90.0
 
 C_MODE_MIN = 0
-C_MODE_MAX = 2
+C_MODE_MAX = 2 -- C_MODE_LOCK should not be able to be overwritten by user
+C_MODE_REAL_MAX = 3
 C_MODE_KEYBOARD = 0
 C_MODE_FREECAM = 1
 C_MODE_KEYBOARD_FREECAM = 2
+C_MODE_LOCK = 3
+
+C_MODE_KEYBOARD_INPUT = {
+    C_MODE_KEYBOARD,
+    C_MODE_KEYBOARD_FREECAM
+}
 
 C_ZERO_VEC3 = vec3(0.0, 0.0, 0.0)
 
-local ScriptData = {
+ScriptData = {
     Active = false, -- active HUD
     -- camera handler
     Cam_Handler = 0,
@@ -95,6 +129,7 @@ local ScriptData = {
     -- current cam mode; 0-manual rotation; 1-free roam; 2-manual rotation+free roam
     Cam_Mode = 0
 }
+local ScriptData = ScriptData
 
 --- if any of the values is in the array, returns true
 ---@param array any[]
@@ -189,47 +224,50 @@ function StartHUD()
         local changed = false
         while script_data.Active do
             Wait(0)
-            if script_data.Cam_Mode == C_MODE_KEYBOARD or script_data.Cam_Mode == C_MODE_KEYBOARD_FREECAM then
-                if script_data.Rot_X == 1 then
-                    script_data.Cam_Rot_X = withinRange(C_ROT_X_MIN, C_ROT_X_MAX, ScriptData.Cam_Rot_X, ScriptData.Rot_X_Value)
-                    changed = true
-                elseif script_data.Rot_X == 2 then
-                    script_data.Cam_Rot_X = withinRange(C_ROT_X_MIN, C_ROT_X_MAX, ScriptData.Cam_Rot_X, -ScriptData.Rot_X_Value)
-                    changed = true
-                end
-                if script_data.Rot_Y == 1 then
-                    script_data.Cam_Rot_Y = withinRange(C_ROT_Y_MIN, C_ROT_Y_MAX, ScriptData.Cam_Rot_Y, ScriptData.Rot_Y_Value)
-                    changed = true
-                elseif script_data.Rot_Y == 2 then
-                    script_data.Cam_Rot_Y = withinRange(C_ROT_Y_MIN, C_ROT_Y_MAX, ScriptData.Cam_Rot_Y, -ScriptData.Rot_Y_Value)
-                    changed = true
-                end
-                if script_data.Rot_Z == 1 then
-                    script_data.Cam_Rot_Z = withinRange(C_ROT_Z_MIN, C_ROT_Z_MAX, ScriptData.Cam_Rot_Z, ScriptData.Rot_Z_Value)
-                    changed = true
-                elseif script_data.Rot_Z == 2 then
-                    script_data.Cam_Rot_Z = withinRange(C_ROT_Z_MIN, C_ROT_Z_MAX, ScriptData.Cam_Rot_Z, -ScriptData.Rot_Z_Value)
-                    changed = true
-                end
-                if changed then
-                    if script_data.Cam_Mode == C_MODE_KEYBOARD_FREECAM then
-                        SetFreecamRotation(script_data.Cam_Rot_X, script_data.Cam_Rot_Y, script_data.Cam_Rot_Z)
-                    else
-                        SetCamRot(script_data.Cam_Handler, script_data.Cam_Rot_X, script_data.Cam_Rot_Y, script_data.Cam_Rot_Z, C_ROT_ORDER)
+            SetEntityLocallyInvisible(PlayerPedId(),true)
+            if script_data.Cam_Mode ~= C_MODE_LOCK then
+                if (isOneOf(script_data.Cam_Mode, C_MODE_KEYBOARD_INPUT)) then
+                    if script_data.Rot_X == 1 then
+                        script_data.Cam_Rot_X = withinRange(C_ROT_X_MIN, C_ROT_X_MAX, ScriptData.Cam_Rot_X, ScriptData.Rot_X_Value)
+                        changed = true
+                    elseif script_data.Rot_X == 2 then
+                        script_data.Cam_Rot_X = withinRange(C_ROT_X_MIN, C_ROT_X_MAX, ScriptData.Cam_Rot_X, -ScriptData.Rot_X_Value)
+                        changed = true
                     end
-                    changed = false
+                    if script_data.Rot_Y == 1 then
+                        script_data.Cam_Rot_Y = withinRange(C_ROT_Y_MIN, C_ROT_Y_MAX, ScriptData.Cam_Rot_Y, ScriptData.Rot_Y_Value)
+                        changed = true
+                    elseif script_data.Rot_Y == 2 then
+                        script_data.Cam_Rot_Y = withinRange(C_ROT_Y_MIN, C_ROT_Y_MAX, ScriptData.Cam_Rot_Y, -ScriptData.Rot_Y_Value)
+                        changed = true
+                    end
+                    if script_data.Rot_Z == 1 then
+                        script_data.Cam_Rot_Z = withinRange(C_ROT_Z_MIN, C_ROT_Z_MAX, ScriptData.Cam_Rot_Z, ScriptData.Rot_Z_Value)
+                        changed = true
+                    elseif script_data.Rot_Z == 2 then
+                        script_data.Cam_Rot_Z = withinRange(C_ROT_Z_MIN, C_ROT_Z_MAX, ScriptData.Cam_Rot_Z, -ScriptData.Rot_Z_Value)
+                        changed = true
+                    end
+                    if changed then
+                        if script_data.Cam_Mode == C_MODE_KEYBOARD_FREECAM then
+                            SetFreecamRotation(script_data.Cam_Rot_X, script_data.Cam_Rot_Y, script_data.Cam_Rot_Z)
+                        else
+                            SetCamRot(script_data.Cam_Handler, script_data.Cam_Rot_X, script_data.Cam_Rot_Y, script_data.Cam_Rot_Z, C_ROT_ORDER)
+                        end
+                        changed = false
+                    end
                 end
-            end
-            local fov_changed = false
-            if script_data.Fov == 1 then
-                script_data.Cam_Fov = withinRange(C_FOV_MIN, C_FOV_MAX, script_data.Cam_Fov, 1)
-                fov_changed = true
-            elseif script_data.Fov == 2 then
-                script_data.Cam_Fov = withinRange(C_FOV_MIN, C_FOV_MAX, script_data.Cam_Fov, -1)
-                fov_changed = true
-            end
-            if fov_changed then
-                SetCamFov(script_data.Cam_Handler, script_data.Cam_Fov)
+                local fov_changed = false
+                if script_data.Fov == 1 then
+                    script_data.Cam_Fov = withinRange(C_FOV_MIN, C_FOV_MAX, script_data.Cam_Fov, 1)
+                    fov_changed = true
+                elseif script_data.Fov == 2 then
+                    script_data.Cam_Fov = withinRange(C_FOV_MIN, C_FOV_MAX, script_data.Cam_Fov, -1)
+                    fov_changed = true
+                end
+                if fov_changed then
+                    SetCamFov(script_data.Cam_Handler, script_data.Cam_Fov)
+                end
             end
         end
     end)
@@ -332,12 +370,13 @@ end, false)
 RegisterKeyMapping("+cam_fov_up", "Increase cam FOV", "MOUSE_WHEEL", "IOM_WHEEL_DOWN")
 RegisterKeyMapping("+cam_fov_down", "Decrease cam FOV", "MOUSE_WHEEL", "IOM_WHEEL_UP")
 
-RegisterCommand("toggle_cam_mode", function()
-    if ScriptData.Active then
-        ScriptData.Cam_Mode = withinRange(C_MODE_MIN, C_MODE_MAX, ScriptData.Cam_Mode, 1)
-        local isFreecam = isOneOf(ScriptData.Cam_Mode, {C_MODE_FREECAM, C_MODE_KEYBOARD_FREECAM})
+function SetCamMode(mode, real_max, override)
+    mode = mode or ScriptData.Cam_Mode
+    if ScriptData.Active and (override or ScriptData.Cam_Mode ~= C_MODE_LOCK) then
+        ScriptData.Cam_Mode = withinRange(C_MODE_MIN, real_max and C_MODE_REAL_MAX or C_MODE_MAX, mode, 0)
+        local isFreecam = isOneOf(mode, {C_MODE_FREECAM, C_MODE_KEYBOARD_FREECAM})
         local previousFreecam = isOneOf(
-            withinRange(C_MODE_MIN, C_MODE_MAX, ScriptData.Cam_Mode, -1),
+            withinRange(C_MODE_MIN, real_max and C_MODE_REAL_MAX or C_MODE_MAX, mode, -1),
             {C_MODE_FREECAM, C_MODE_KEYBOARD_FREECAM}
         )
         if isFreecam then
@@ -357,6 +396,16 @@ RegisterCommand("toggle_cam_mode", function()
             SetFreecamActive(false, nil, nil, nil)
         end
     end
+end
+
+RegisterCommand("toggle_cam_mode", function()
+    SetCamMode(ScriptData.Cam_Mode + 1)
 end, false)
 
 RegisterKeyMapping("toggle_cam_mode", "toggle cam mode", "keyboard", "h")
+
+RegisterCommand("enter_pressed", function()
+    FireEvent('enter')
+end, false)
+
+RegisterKeyMapping("enter_pressed", "Enter Pressed", "keyboard", "return")

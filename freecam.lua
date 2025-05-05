@@ -324,7 +324,7 @@ function StartFreecamThread(coords)
         local initialPos = coords or GetEntityCoords(ped)
         SetFreecamPosition(initialPos[1], initialPos[2], initialPos[3])
         while IsFreecamActive() do
-            SetEntityLocallyInvisible(ped,true)
+            -- SetEntityLocallyInvisible(ped,true)
             UpdateCamera()
             Wait(10)
         end
