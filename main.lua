@@ -77,37 +77,6 @@ end
 --- @field handler number|nil
 local CamData = {}
 
--- Constants
-C_IMG_ENCODING = "jpg"
-C_IMG_QUALITY = 0.50
-
-C_ROT_ORDER = 2
-C_ROT_X_MIN = -180.0
-C_ROT_X_MAX = 180.0
-C_ROT_Y_MIN = -180.0
-C_ROT_Y_MAX = 180.0
-C_ROT_Z_MIN = -180.0
-C_ROT_Z_MAX = 180.0
-C_FOV_MIN = 10
-C_FOV_MAX = 120
-
-C_CAM_DEFAULT_FOV = 90.0
-
-C_MODE_MIN = 0
-C_MODE_MAX = 2 -- C_MODE_LOCK should not be able to be overwritten by user
-C_MODE_REAL_MAX = 3
-C_MODE_KEYBOARD = 0
-C_MODE_FREECAM = 1
-C_MODE_KEYBOARD_FREECAM = 2
-C_MODE_LOCK = 3
-
-C_MODE_KEYBOARD_INPUT = {
-    C_MODE_KEYBOARD,
-    C_MODE_KEYBOARD_FREECAM
-}
-
-C_ZERO_VEC3 = vec3(0.0, 0.0, 0.0)
-
 ScriptData = {
     Active = false, -- active HUD
     -- camera handler
@@ -224,7 +193,7 @@ function StartHUD()
         local changed = false
         while script_data.Active do
             Wait(0)
-            SetEntityLocallyInvisible(PlayerPedId(),true)
+            SetEntityLocallyInvisible(PlayerPedId())
             if script_data.Cam_Mode ~= C_MODE_LOCK then
                 if (isOneOf(script_data.Cam_Mode, C_MODE_KEYBOARD_INPUT)) then
                     if script_data.Rot_X == 1 then

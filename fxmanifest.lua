@@ -7,6 +7,8 @@ author 'Verbaz'
 lua54 'yes'
 
 client_scripts {
+    'easing.lua',
+    'constants.lua',
     'main.lua',
     'freecam.lua',
     'steps.lua'

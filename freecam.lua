@@ -346,7 +346,7 @@ function GetInitialCameraRotation()
         return _internal_rot
     end
 
-    local rot = GetGameplayCamRot()
+    local rot = GetGameplayCamRot(C_ROT_ORDER)
     return vector3(rot.x, 0.0, rot.z)
 end
 
@@ -369,7 +369,7 @@ end
 
 function SetFreecamPosition(x, y, z)
     local pos = vector3(x, y, z)
-    local int = GetInteriorAtCoords(pos)
+    local int = GetInteriorAtCoords(x, y, z)
 
     LoadInterior(int)
     SetFocusArea(pos)
