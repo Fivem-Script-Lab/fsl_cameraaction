@@ -1,0 +1,91 @@
+@keyframes rotate_arrow_hidden {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes rotate_arrow_visible {
+    from {
+        transform: rotate(180deg)
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+body {
+    all: unset;
+    overflow: hidden;
+}
+
+#flags_container {
+    position: relative;
+    float: right;
+    height: 100vh;
+    min-width: 10rem;
+    background-color: rgba(43, 43, 43, 0.507);
+    box-sizing: border-box;
+    border: solid rgba(21, 214, 208, 0.476) 0.1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: grid;
+    grid-auto-flow: row;
+}
+
+.container-header {
+    position: relative;
+    width: 100%;
+    min-height: 2rem;
+    font-size: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    background-color: rgba(11, 153, 189, 0.77);
+    box-sizing: border-box;
+    padding: 0.2rem;
+    padding-left: 1rem;
+}
+
+.container-header:hover span {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.hidden-header {
+    animation: rotate_arrow_hidden 150ms ease-in-out forwards;
+}
+
+.visible-header {
+    animation: rotate_arrow_visible 150ms ease-in-out forwards;
+}
+
+.container-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem
+}
+
+.container-element {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.container-element>input {
+    position: relative;
+    margin-left: auto;
+}
+
+.container-element>span {
+    font-size: 1.25rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.container-hidden {
+    display: none;
+}
