@@ -46,10 +46,10 @@ AttachListener('flag_set', function(flag, value, is_nui)
             draw_flags_loop = true
             CreateThread(function()
                 local cam_data = CamData
-                local base_tolerance = 0.05
-                local tolerance_scale = 0.01
+                local select_index, select_object = -1, nil
                 while draw_flags > 0 do
                     Wait(0)
+                    local selected_index = -1
                     for i=1, #cam_data do
                         local x1,y1,z1 = table.unpack(cam_data[i].coords)
                         local x2,y2,z2 = table.unpack(cam_data[cam_data[i].linked].coords)
@@ -69,7 +69,7 @@ AttachListener('flag_set', function(flag, value, is_nui)
                         elseif draw_path then
                             DrawLine(x1, y1, z1, x2, y2, z2, 255, 0, 0, 150)
                         end
-                        if draw_joints then
+                        if draw_joints or (select_mouse and ScriptData.Nui) then
                             if select_mouse then
                                 if point2 == nil then
                                     point2, px2, py2 = GetScreenCoordFromWorldCoord(x2, y2, z2)
@@ -78,8 +78,9 @@ AttachListener('flag_set', function(flag, value, is_nui)
                                     playerCoords = GetEntityCoords(PlayerPedId())
                                 end
                                 local dist = #(playerCoords - cam_data[i].coords)
-                                local tolerance = base_tolerance * (dist * tolerance_scale)
+                                local tolerance = ScriptData.Mouse_Select_Base_Tolerance * (dist * ScriptData.Mouse_Select_Base_Tolerance_Scale)
                                 if point2 and math.abs(ScriptData.Mouse_X - px2) < tolerance and math.abs(ScriptData.Mouse_Y - py2) < tolerance then
+                                    selected_index = cam_data[i].linked
                                     DrawGlowSphere(x2, y2, z2, 1.0, 0, 255, 255, 0.5, false, true)
                                 else
                                     DrawGlowSphere(x2, y2, z2, 1.0, 0, 255, 0, 0.5, false, true)
@@ -115,6 +116,18 @@ AttachListener('flag_set', function(flag, value, is_nui)
                                 DrawText3Ds(data, x1, y1, z1 + 1.0)
                             end
                         end
+                    end
+                    if selected_index ~= -1 then
+                        if select_index ~= selected_index then
+                            if select_index ~= -1 then
+                                FireEvent('mouse_off_camera', select_object, select_index)
+                            end
+                            select_index, select_object = selected_index, cam_data[select_index]
+                            FireEvent('mouse_on_camera', select_object, select_index)
+                        end
+                    elseif select_index ~= -1 then
+                        FireEvent('mouse_off_camera', select_object, select_index)
+                        select_index, select_object = -1, nil
                     end
                 end
                 draw_flags_loop = false

@@ -2,6 +2,7 @@
 
 ScriptData = {
     Active = false, -- active HUD
+    Nui = false,
     -- camera handler
     Cam_Handler = 0,
     -- states of input
@@ -22,7 +23,9 @@ ScriptData = {
     -- current cam mode; 0-manual rotation; 1-free roam; 2-manual rotation+free roam
     Cam_Mode = 0,
     Mouse_X = 0.0,
-    Mouse_Y = 0.0
+    Mouse_Y = 0.0,
+    Mouse_Select_Base_Tolerance = C_SELECT_MOUSE_BASE_TOLERANCE,
+    Mouse_Select_Base_Tolerance_Scale = C_SELECT_MOUSE_BASE_TOLERANCE_SCALE
 }
 local ScriptData = ScriptData
 

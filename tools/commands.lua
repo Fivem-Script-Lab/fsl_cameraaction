@@ -15,6 +15,7 @@ RegisterCommand('set_nui_active', function()
     SetNuiFocus(active_nui, active_nui)
     SetNuiFocusKeepInput(active_nui)
     FireEvent('nui', active_nui)
+    ScriptData.Nui = active_nui
 end, false)
 
 RegisterKeyMapping("set_nui_active", 'set nui active', 'keyboard', 'z')
