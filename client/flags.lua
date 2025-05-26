@@ -11,7 +11,7 @@ local draw_metadata_text = false
 
 local select_mouse = false
 
-AttachListener('flag_set', function(flag, value)
+AttachListener(C_EVENTS_ENUM.C_EVENT_FLAG_STATE, function(flag, value)
     if flag == C_FLAG_DRAW_PATH then
         draw_path = value
     elseif flag == C_FLAG_DRAW_JOINTS then
@@ -29,7 +29,7 @@ AttachListener('flag_set', function(flag, value)
     end
 end)
 
-AttachListener('flag_set', function(flag, value, is_nui)
+AttachListener(C_EVENTS_ENUM.C_EVENT_FLAG_STATE, function(flag, value, is_nui)
     if not is_nui then
         SendNUIMessage({
             type = 'flag',
@@ -120,14 +120,17 @@ AttachListener('flag_set', function(flag, value, is_nui)
                     if selected_index ~= -1 then
                         if select_index ~= selected_index then
                             if select_index ~= -1 then
-                                FireEvent('mouse_off_camera', select_object, select_index)
+                                FireEvent(C_EVENTS_ENUM.C_EVENT_MOUSE_OFF_CAMERA, select_object, select_index)
                             end
-                            select_index, select_object = selected_index, cam_data[select_index]
-                            FireEvent('mouse_on_camera', select_object, select_index)
+                            select_index, select_object = selected_index, cam_data[selected_index]
+                            FireEvent(C_EVENTS_ENUM.C_EVENT_MOUSE_ON_CAMERA, select_object, select_index)
                         end
                     elseif select_index ~= -1 then
-                        FireEvent('mouse_off_camera', select_object, select_index)
+                        FireEvent(C_EVENTS_ENUM.C_EVENT_MOUSE_OFF_CAMERA, select_object, select_index)
                         select_index, select_object = -1, nil
+                    end
+                    if select_object and ScriptData.Mouse_Left_Button then
+                        select_object.coords = select_object.coords + vec3(0.0, 0.0, 1.0)
                     end
                 end
                 draw_flags_loop = false

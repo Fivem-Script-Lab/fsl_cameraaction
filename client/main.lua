@@ -22,10 +22,13 @@ ScriptData = {
     Cam_Speed = 0.85,
     -- current cam mode; 0-manual rotation; 1-free roam; 2-manual rotation+free roam
     Cam_Mode = 0,
+    -- 0.0 - 1.0
     Mouse_X = 0.0,
+    -- 0.0 - 1.0
     Mouse_Y = 0.0,
     Mouse_Select_Base_Tolerance = C_SELECT_MOUSE_BASE_TOLERANCE,
-    Mouse_Select_Base_Tolerance_Scale = C_SELECT_MOUSE_BASE_TOLERANCE_SCALE
+    Mouse_Select_Base_Tolerance_Scale = C_SELECT_MOUSE_BASE_TOLERANCE_SCALE,
+    Mouse_Left_Button = false
 }
 local ScriptData = ScriptData
 
@@ -74,7 +77,7 @@ function StartHUD()
         script_data.Cam_Handler = CreateCamera({
             coords = GetEntityCoords(PlayerPedId())
         }).handler
-        FireEvent('start')
+        FireEvent(C_EVENTS_ENUM.C_EVENT_START)
         SetCamActive(script_data.Cam_Handler, true)
         RenderScriptCams(true, true, 500, false, true)
         local changed = false

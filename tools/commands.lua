@@ -14,7 +14,7 @@ RegisterCommand('set_nui_active', function()
     active_nui = not active_nui
     SetNuiFocus(active_nui, active_nui)
     SetNuiFocusKeepInput(active_nui)
-    FireEvent('nui', active_nui)
+    FireEvent(C_EVENTS_ENUM.C_EVENT_NUI_STATE, active_nui)
     ScriptData.Nui = active_nui
 end, false)
 
@@ -33,7 +33,7 @@ end, false)
 RegisterKeyMapping("toggle_cam_mode", "toggle cam mode", "keyboard", "h")
 
 RegisterCommand("enter_pressed", function()
-    FireEvent('enter')
+    FireEvent(C_EVENTS_ENUM.C_EVENT_KEY_ENTER_PRESSED)
 end, false)
 
 RegisterKeyMapping("enter_pressed", "Enter Pressed", "keyboard", "return")

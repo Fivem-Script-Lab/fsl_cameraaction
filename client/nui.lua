@@ -16,11 +16,15 @@ RegisterNUICallback('ready', function()
     })
 end)
 
-RegisterNUICallback('set_flag', function(data, cb)
-    FireEvent("flag_set", C_FLAG_ENUM[data.flag], data.value, true)
+RegisterNUICallback('set_flag', function(data)
+    FireEvent(C_EVENTS_ENUM.C_EVENT_FLAG_STATE, C_FLAG_ENUM[data.flag], data.value, true)
 end)
 
-RegisterNUICallback('mouse_move', function(data, cb)
+RegisterNUICallback('mouse_move', function(data)
     ScriptData.Mouse_X = data.x
     ScriptData.Mouse_Y = data.y
+end)
+
+RegisterNUICallback('click', function(data)
+    ScriptData.Mouse_Left_Button = data.state
 end)

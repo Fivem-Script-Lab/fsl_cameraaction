@@ -7,6 +7,7 @@ function AttachListener(name, cb)
 end
 
 function FireEvent(name, ...)
+    print('FiredEvent: ' .. name)
     for _,cb in ipairs(listeners[name] or {}) do
         cb(...)
     end

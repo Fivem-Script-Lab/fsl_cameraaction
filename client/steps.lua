@@ -3,7 +3,7 @@ local ScriptData = ScriptData
 ---@type CamData[]
 CamData = {}
 
-AttachListener('enter', function()
+AttachListener(C_EVENTS_ENUM.C_EVENT_KEY_ENTER_PRESSED, function()
     if not ScriptData.Active then return end
     local previous_cam_mode = ScriptData.Cam_Mode
     SetCamMode(C_MODE_LOCK, true)

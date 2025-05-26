@@ -1,4 +1,4 @@
-const post = (nui, data) => {
+const post = (nui, data={}) => {
     $.post(
         "https://" + GetParentResourceName() + "/" + nui,
         JSON.stringify(data)
@@ -23,6 +23,18 @@ window.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('mousemove', (e) => {
     let [x, y] = [(e.clientX / window.innerWidth), (e.clientY / window.innerHeight)];
     post('mouse_move', {x: x, y: y});
+})
+
+let click_started = false;
+window.addEventListener('mousedown', (e) => {
+    if(!click_started) {
+        click_started = true;
+        post('click', {state: true});
+        setTimeout(()=>{
+            post('click', {state: false})
+            click_started = false
+        }, 100);
+    }
 })
 
 function ChangeStateOfHeader(e) {
