@@ -13,7 +13,6 @@ local active_nui = false
 RegisterCommand('set_nui_active', function()
     active_nui = not active_nui
     SetNuiFocus(active_nui, active_nui)
-    SetNuiFocusKeepInput(active_nui)
     FireEvent(C_EVENTS_ENUM.C_EVENT_NUI_STATE, active_nui)
     ScriptData.Nui = active_nui
 end, false)

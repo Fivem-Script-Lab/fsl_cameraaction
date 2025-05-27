@@ -23,6 +23,7 @@ C_EVENTS_ENUM = {
     C_EVENT_START = 'start',
     C_EVENT_NUI_STATE = 'nui_state',
     C_EVENT_FLAG_STATE = 'flag_state',
+    C_EVENT_SELECT_STATE = 'select_state',
     C_EVENT_MOUSE_ON_CAMERA = 'mouse_on_camera',
     C_EVENT_MOUSE_OFF_CAMERA = 'mouse_off_camera',
     C_EVENT_KEY_ENTER_PRESSED = 'enter_pressed'
@@ -80,6 +81,45 @@ C_MODE_FREECAM_INPUT = {
 -- default zero vector
 C_ZERO_VEC3 = vec3(0.0, 0.0, 0.0)
 
+C_EASE_GROUP_IN = {
+    "EaseInQuad",
+    "EaseInCubic",
+    "EaseInSine",
+    "EaseInBack",
+    "EaseInQuart",
+    "EaseInQuint",
+    "EaseInExpo",
+    "EaseInCirc"
+}
+
+C_EASE_GROUP_OUT = {
+    "EaseOutQuad",
+    "EaseOutCubic",
+    "EaseOutSine",
+    "EaseOutBack",
+    "EaseOutQuart",
+    "EaseOutQuint",
+    "EaseOutExpo",
+    "EaseOutCirc",
+    "EaseOutElastic",
+    "EaseOutBounce"
+}
+
+C_EASE_GROUP_IN_OUT = {
+    "EaseInOutQuad",
+    "EaseInOutCubic",
+    "EaseInOutSine",
+    "EaseInOutBack",
+    "EaseInOutQuart",
+    "EaseInOutQuint",
+    "EaseInOutExpo",
+    "EaseInOutCirc"
+}
+
+C_EASE_GROUP_OTHER = {
+    "EaseLinear"
+}
+
 C_EASE_ENUM = {
     C_EASE_LINEAR = 1,
     C_EASE_IN_QUAD = 2,
@@ -110,48 +150,35 @@ C_EASE_ENUM = {
     C_EASE_OUT_BOUNCE = 27
 }
 
-C_EASE_GROUP_PREFIX = {
-    'LINEAR',
-    'IN',
-    'OUT',
-    'IN_OUT'
+C_EASE_GROUP_FUNCTIONS_NAMES = {
+    "EaseLinear",
+    "EaseInQuad",
+    "EaseOutQuad",
+    "EaseInOutQuad",
+    "EaseInCubic",
+    "EaseOutCubic",
+    "EaseInOutCubic",
+    "EaseInSine",
+    "EaseOutSine",
+    "EaseInOutSine",
+    "EaseInBack",
+    "EaseOutBack",
+    "EaseInOutBack",
+    "EaseInQuart",
+    "EaseOutQuart",
+    "EaseInOutQuart",
+    "EaseInQuint",
+    "EaseOutQuint",
+    "EaseInOutQuint",
+    "EaseInExpo",
+    "EaseOutExpo",
+    "EaseInOutExpo",
+    "EaseInCirc",
+    "EaseOutCirc",
+    "EaseInOutCirc",
+    "EaseOutElastic",
+    "EaseOutBounce"
 }
-
-C_EASE_GROUP_NAME = {
-    'QUAD',
-    'CUBIC',
-    'SINE',
-    'BACK',
-    'QUART',
-    'QUINT',
-    'EXPO',
-    'CIRC',
-    'ELASTIC',
-    'BOUNCE'
-}
-
-C_EASE_GROUP_LINEAR_MIN = 1
-C_EASE_GROUP_LINEAR_MAX = 1
-C_EASE_GROUP_QUAD_MIN = 2
-C_EASE_GROUP_QUAD_MAX = 4
-C_EASE_GROUP_CUBIC_MIN = 5
-C_EASE_GROUP_CUBIC_MAX = 7
-C_EASE_GROUP_SINE_MIN = 8
-C_EASE_GROUP_SINE_MAX = 10
-C_EASE_GROUP_BACK_MIN = 11
-C_EASE_GROUP_BACK_MAX = 13
-C_EASE_GROUP_QUART_MIN = 14
-C_EASE_GROUP_QUART_MAX = 16
-C_EASE_GROUP_QUINT_MIN = 17
-C_EASE_GROUP_QUINT_MAX = 19
-C_EASE_GROUP_EXPO_MIN = 20
-C_EASE_GROUP_EXPO_MAX = 22
-C_EASE_GROUP_CIRC_MIN = 23
-C_EASE_GROUP_CIRC_MAX = 25
-C_EASE_GROUP_ELASTIC_MIN = 26
-C_EASE_GROUP_ELASTIC_MAX = 26
-C_EASE_GROUP_BOUNCE_MIN = 27
-C_EASE_GROUP_BOUNCE_MAX = 27
 
 C_EASE_GROUP_FUNCTIONS = {
     EaseLinear,
